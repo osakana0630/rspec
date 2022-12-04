@@ -58,4 +58,15 @@ RSpec.describe User, type: :model do
     expect(user).to_not be_valid
     expect(user.errors[:email]).to include('has already been taken')
   end
+
+  # ユーザーのフルネームを返却すること
+  it "returns user's full name as a string" do
+    user = User.create(
+      first_name: 'taro',
+      last_name: 'tanaka',
+      email: 'test@test.com',
+      password: 'password'
+    )
+    expect(user.name).to eql 'taro tanaka'
+  end
 end
