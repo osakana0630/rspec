@@ -60,13 +60,15 @@ RSpec.describe User, type: :model do
   end
 
   # ユーザーのフルネームを返却すること
-  it "returns user's full name as a string" do
-    user = User.create(
-      first_name: 'taro',
-      last_name: 'tanaka',
-      email: 'test@test.com',
-      password: 'password'
-    )
-    expect(user.name).to eql 'taro tanaka'
+  describe '#name' do
+    it "returns user's full name as a string" do
+      user = User.create(
+        first_name: 'taro',
+        last_name: 'tanaka',
+        email: 'test@test.com',
+        password: 'password'
+      )
+      expect(user.name).to eql 'taro tanaka'
+    end
   end
 end
