@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Note, type: :model do
   # searchスコープに関するテスト
   describe '.search' do
-    before do
+    before(:all) do
       user = User.create(
         first_name: 'taro',
         last_name: 'tanaka',
