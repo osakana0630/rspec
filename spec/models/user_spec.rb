@@ -42,7 +42,8 @@ RSpec.describe User, type: :model do
   # ユーザーのフルネームを返却すること
   describe '#name' do
     it "returns user's full name as a string" do
-      expect(create(:user).name).to eql 'Taro Tanaka'
+      user = create(:user, first_name: 'Taro', last_name: 'Tanaka')
+      expect(user.name).to eql 'Taro Tanaka'
     end
   end
 end
