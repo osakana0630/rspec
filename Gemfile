@@ -54,14 +54,13 @@ group :development, :test do
 
   gem 'factory_bot_rails'
   gem 'rspec-rails' # add in chapter 2
+  gem 'standard'
+  gem 'rubocop', require: false
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
-
-  # code linter
-  gem 'rubocop', require: false
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -89,4 +88,3 @@ gem 'geocoder'
 gem 'net-imap'
 gem 'net-pop'
 gem 'net-smtp'
-gem 'rspec-rails'
