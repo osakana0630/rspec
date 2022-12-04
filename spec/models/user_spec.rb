@@ -11,8 +11,7 @@ RSpec.describe User, type: :model do
 
   # 姓、名、メール、パスワードがあれば有効な状態であること
   it 'is valid with a first_name, last_name, email, and password' do
-    user = build(:user)
-    expect(user).to be_valid
+    expect(build(:user)).to be_valid
   end
 
   # 名がないなら無効な状態であること
@@ -43,8 +42,7 @@ RSpec.describe User, type: :model do
   # ユーザーのフルネームを返却すること
   describe '#name' do
     it "returns user's full name as a string" do
-      user = create(:user)
-      expect(user.name).to eql 'Taro Tanaka'
+      expect(create(:user).name).to eql 'Taro Tanaka'
     end
   end
 end
