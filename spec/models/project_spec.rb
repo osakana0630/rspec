@@ -46,4 +46,17 @@ RSpec.describe Project, type: :model do
     project = user2.projects.build(name: 'project name')
     expect(project).to be_valid
   end
+
+  describe '#late?' do
+    # 締切日が過ぎていればtrueを返すこと
+    it 'returns true when due_on is missed' do
+      project = @user.projects.create(name: 'project name', due_on: Date.current - 1.day)
+      expect(project.late?).to be true
+    end
+    # 締切日が過ぎていなければfalseを返すこと
+    it 'returns false when no due_on is missed' do
+      project = @user.projects.create(name: 'project name', due_on: Date.current + 1.day)
+      expect(project.late?).to be false
+    end
+  end
 end
