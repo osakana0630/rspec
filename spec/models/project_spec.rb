@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
-
   before do
     @user = User.create(
       first_name: 'taro',
@@ -15,48 +14,50 @@ RSpec.describe Project, type: :model do
 
   # 名前、オーナー、タスクがあるなら有効な状態であること
   it 'is valid with a name and owner' do
-    project = @user.projects.build(name: 'project name')
-    expect(project).to be_valid
+    expect(build(:project)).to be_valid
   end
 
   # 名前がないなら無効な状態であること
   it 'is invalid without a name' do
-    project = @user.projects.build(name: nil)
+    project = build(:project, name: nil)
     expect(project).to_not be_valid
   end
 
   # ユーザー単位では重複したプロジェクト名を許可しないこと
   it 'does not allow duplicate project names per user' do
-    @user.projects.create(name: 'project name')
-    project = @user.projects.build(name: 'project name')
-    project.valid?
-    expect(project).to_not be_valid
-    expect(project.errors[:name]).to include('has already been taken')
+    user = create(:user)
+    create(:project, name: 'fist project', owner: user)
+    new_project = build(:project, name: 'fist project', owner: user)
+
+    new_project.valid?
+    expect(new_project).to_not be_valid
+    expect(new_project.errors[:name]).to include('has already been taken')
   end
 
   # 2人のユーザーが同じプロジェクト名を使用することは許可すること
   it 'allows two users to share a project name' do
-    user2 = User.create(
-      first_name: 'jiro',
-      last_name: 'sato',
-      email: 'test2@test.com',
-      password: 'password'
-    )
-    @user.projects.create(name: 'project name')
-    project = user2.projects.build(name: 'project name')
-    expect(project).to be_valid
+    user1 = create(:user)
+    user2 = create(:user)
+    create(:project, owner: user1, name: 'project name')
+    new_project = build(:project, owner: user2, name: 'project name')
+    expect(new_project).to be_valid
   end
 
   describe '#late?' do
-    # 締切日が過ぎていればtrueを返すこと
-    it 'returns true when due_on is missed' do
-      project = @user.projects.create(name: 'project name', due_on: Date.current - 1.day)
-      expect(project.late?).to be true
+    # 締切日が過ぎていれば遅延していること
+    it 'is late when the due date is past today' do
+      project = create(:project, :due_yesterday)
+      expect(project).to be_late
     end
-    # 締切日が過ぎていなければfalseを返すこと
-    it 'returns false when no due_on is missed' do
-      project = @user.projects.create(name: 'project name', due_on: Date.current + 1.day)
-      expect(project.late?).to be false
+    # 締切日が今日ならスケジュール通りであること
+    it 'is on time when the due date is today' do
+      project = create(:project, :due_today)
+      expect(project).to_not be_late
+    end
+    # 締切日が未来ならスケジュール通りであること
+    it 'is on time when the due date is in the future' do
+      project = create(:project, :due_tomorrow)
+      expect(project).to_not be_late
     end
   end
 end

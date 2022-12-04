@@ -13,6 +13,13 @@ RSpec.describe Note, type: :model do
     @project = @user.projects.create!(name: 'project name')
   end
 
+  # ファクトリで関連するデータを作成する
+  it 'generates associated data from a factory' do
+    note = create(:note)
+    p note.project.inspect
+    p note.user.inspect
+  end
+
   # ユーザー、プロジェクト、メッセージがあれば有効な状態であること　
   it 'is valid with a user, project and message' do
     note = @project.notes.build(
