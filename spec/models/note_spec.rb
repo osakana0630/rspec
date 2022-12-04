@@ -3,66 +3,43 @@
 require 'rails_helper'
 
 RSpec.describe Note, type: :model do
-  before do
-    @user = User.create!(
-      first_name: 'taro',
-      last_name: 'tanaka',
-      email: 'test@test.com',
-      password: 'password'
-    )
-    @project = @user.projects.create!(name: 'project name')
-  end
-
   # ファクトリで関連するデータを作成する
   it 'generates associated data from a factory' do
     note = create(:note)
-    p note.project.inspect
-    p note.user.inspect
+    expect(note.user).to_not be nil
+    expect(note.project).to_not be nil
   end
 
   # ユーザー、プロジェクト、メッセージがあれば有効な状態であること　
   it 'is valid with a user, project and message' do
-    note = @project.notes.build(
-      message: 'test message',
-      user: @user
-    )
-    expect(note).to be_valid
+    expect(build(:note)).to be_valid
   end
 
   # ユーザーがなければ無効な状態であること　
   it 'is invalid without a user' do
-    note = @project.notes.build(
-      message: 'test message',
-      user: nil
-    )
-    expect(note).to_not be_valid
+    expect(build(:note, user: nil)).to_not be_valid
   end
 
   # プロジェクトがなければ無効な状態であること　
   it 'is invalid without a project' do
-    note = Note.new(
-      message: 'test message',
-      user: @user,
-      project: nil
-    )
+    # projectからuserを作成しているため、有効なnoteを作成した上でprojectをnilにする
+    note = build(:note)
+    note.project = nil
     expect(note).to_not be_valid
   end
 
   # メッセージがなければ無効な状態であること　
   it 'is invalid without a message' do
-    note = @project.notes.build(
-      message: nil,
-      user: @user
-    )
-    expect(note).to_not be_valid
+    expect(build(:note, message: nil)).to_not be_valid
   end
 
   # searchスコープに関するテスト
   describe '.search' do
     before do
-      @note1 = @project.notes.create(message: 'This is the first note', user: @user)
-      @note2 = @project.notes.create(message: 'This is the second note', user: @user)
-      @note3 = @project.notes.create(message: 'First of all', user: @user)
+      user = create(:user)
+      @note1 = create(:note, user:, message: 'This is the first note')
+      @note2 = create(:note, user:, message: 'This is the second note')
+      @note3 = create(:note, user:, message: 'First of all')
     end
 
     # 一致するメモが見つかる場合

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   # 有効なファクトリを持つこと
   it 'has a valid factory' do
     expect(build(:user)).to be_valid
@@ -24,7 +23,7 @@ RSpec.describe User, type: :model do
 
   # 姓がないなら無効な状態であること
   it 'is invalid without a last_name' do
-    user = build(:user, last_name: nil,)
+    user = build(:user, last_name: nil)
     user.valid?
     expect(user).to_not be_valid
     expect(user.errors[:last_name]).to include("can't be blank")

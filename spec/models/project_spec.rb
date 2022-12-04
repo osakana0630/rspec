@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe Project, type: :model do
   # 　ファクトリによってメモ付きでプロジェクトが作成されていること
   it 'generate a project with 5 notes' do
-    project = create(:project, :with_notes)
-    expect(project.notes.size).to be 5
+    expect(create(:project, :with_notes).notes.size).to be 5
   end
 
   # 名前、オーナー、タスクがあるなら有効な状態であること
@@ -16,8 +15,7 @@ RSpec.describe Project, type: :model do
 
   # 名前がないなら無効な状態であること
   it 'is invalid without a name' do
-    project = build(:project, name: nil)
-    expect(project).to_not be_valid
+    expect(build(:project, name: nil)).to_not be_valid
   end
 
   # ユーザー単位では重複したプロジェクト名を許可しないこと
@@ -43,18 +41,15 @@ RSpec.describe Project, type: :model do
   describe '#late?' do
     # 締切日が過ぎていれば遅延していること
     it 'is late when the due date is past today' do
-      project = create(:project, :due_yesterday)
-      expect(project).to be_late
+      expect(create(:project, :due_yesterday)).to be_late
     end
     # 締切日が今日ならスケジュール通りであること
     it 'is on time when the due date is today' do
-      project = create(:project, :due_today)
-      expect(project).to_not be_late
+      expect(create(:project, :due_today)).to_not be_late
     end
     # 締切日が未来ならスケジュール通りであること
     it 'is on time when the due date is in the future' do
-      project = create(:project, :due_tomorrow)
-      expect(project).to_not be_late
+      expect(create(:project, :due_tomorrow)).to_not be_late
     end
   end
 end
