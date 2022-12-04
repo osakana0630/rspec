@@ -3,13 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
-  before do
-    @user = User.create(
-      first_name: 'taro',
-      last_name: 'tanaka',
-      email: 'test@test.com',
-      password: 'password'
-    )
+  # 　ファクトリによってメモ付きでプロジェクトが作成されていること
+  it 'generate a project with 5 notes' do
+    project = create(:project, :with_notes)
+    expect(project.notes.size).to be 5
   end
 
   # 名前、オーナー、タスクがあるなら有効な状態であること
